@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grant Atlas</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-pill">Grant Atlas</div>
+        <nav class="top-nav">
+          <a class="nav-link active" href="#dashboard">Dashboard</a>
+          <a class="nav-link" href="#grants">Grants</a>
+          <a class="nav-link" href="#projects">Projects</a>
+          <a class="nav-link" href="#timeline">Timeline</a>
+        </nav>
+        <button class="ghost-button" id="seedDemoButton" type="button">Reset Demo</button>
+      </header>
+
+      <main class="dashboard" id="dashboard">
+        <section class="hero-card">
+          <div class="hero-copy">
+            <p class="eyebrow">Funding Command Center</p>
+            <h1>Track every grant and the projects it powers.</h1>
+            <p class="hero-text">
+              Keep award amounts, deadlines, statuses, and project impact tied
+              together in one calm, high-visibility workspace.
+            </p>
+            <div class="hero-metrics">
+              <div class="metric-chip">
+                <span class="metric-label">Awarded</span>
+                <strong id="awardedTotal">$0</strong>
+              </div>
+              <div class="metric-chip">
+                <span class="metric-label">Active grants</span>
+                <strong id="activeGrantCount">0</strong>
+              </div>
+              <div class="metric-chip">
+                <span class="metric-label">Funded projects</span>
+                <strong id="fundedProjectCount">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-spotlight">
+            <div class="spotlight-panel">
+              <span class="spotlight-label">At a glance</span>
+              <div class="spotlight-values">
+                <div>
+                  <strong id="upcomingDeadlineCount">0</strong>
+                  <span>Upcoming deadlines</span>
+                </div>
+                <div>
+                  <strong id="grantCoverageRate">0%</strong>
+                  <span>Projects funded</span>
+                </div>
+              </div>
+              <div class="progress-rail">
+                <span id="coverageProgress"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="stats-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Portfolio health</p>
+                <h2>Grant pipeline</h2>
+              </div>
+              <span class="badge" id="pipelineBadge">0 total</span>
+            </div>
+            <div class="status-bars" id="statusBars"></div>
+          </article>
+
+          <article class="panel spotlight-list" id="grants">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Latest activity</p>
+                <h2>Top grants</h2>
+              </div>
+            </div>
+            <div class="list-stack" id="grantList"></div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Add funding</p>
+                <h2>New grant</h2>
+              </div>
+            </div>
+            <form id="grantForm" class="stack-form">
+              <label>
+                Grant name
+                <input name="name" type="text" placeholder="Community Arts Fund" required />
+              </label>
+              <div class="form-row">
+                <label>
+                  Award amount
+                  <input name="amount" type="number" min="0" step="100" placeholder="25000" required />
+                </label>
+                <label>
+                  Status
+                  <select name="status">
+                    <option value="Awarded">Awarded</option>
+                    <option value="In Review">In Review</option>
+                    <option value="Drafting">Drafting</option>
+                    <option value="Closed">Closed</option>
+                  </select>
+                </label>
+              </div>
+              <div class="form-row">
+                <label>
+                  Funder
+                  <input name="funder" type="text" placeholder="State Innovation Office" required />
+                </label>
+                <label>
+                  Deadline
+                  <input name="deadline" type="date" required />
+                </label>
+              </div>
+              <label>
+                Linked projects
+                <select name="projectIds" id="grantProjectSelect" multiple></select>
+              </label>
+              <button class="primary-button" type="submit">Save grant</button>
+            </form>
+          </article>
+
+          <article class="panel schedule-panel" id="timeline">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Timeline</p>
+                <h2>Deadline board</h2>
+              </div>
+            </div>
+            <div class="timeline-list" id="timelineList"></div>
+          </article>
+        </section>
+
+        <section class="bottom-grid">
+          <article class="panel projects-panel" id="projects">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Project map</p>
+                <h2>Projects and funding</h2>
+              </div>
+            </div>
+            <div class="project-cards" id="projectCards"></div>
+          </article>
+
+          <article class="panel form-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Add work</p>
+                <h2>New project</h2>
+              </div>
+            </div>
+            <form id="projectForm" class="stack-form">
+              <label>
+                Project name
+                <input name="name" type="text" placeholder="Neighborhood Mural Series" required />
+              </label>
+              <div class="form-row">
+                <label>
+                  Owner
+                  <input name="owner" type="text" placeholder="Programs Team" required />
+                </label>
+                <label>
+                  Stage
+                  <select name="stage">
+                    <option value="Planning">Planning</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="On Hold">On Hold</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Budget needed
+                <input name="budget" type="number" min="0" step="100" placeholder="18000" required />
+              </label>
+              <button class="primary-button" type="submit">Save project</button>
+            </form>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <template id="grantItemTemplate">
+      <article class="grant-item">
+        <div>
+          <p class="grant-name"></p>
+          <p class="grant-meta"></p>
+        </div>
+        <div class="grant-side">
+          <strong class="grant-amount"></strong>
+          <span class="tag"></span>
+        </div>
+      </article>
+    </template>
+
+    <template id="projectCardTemplate">
+      <article class="project-card">
+        <div class="project-header">
+          <div>
+            <h3 class="project-name"></h3>
+            <p class="project-owner"></p>
+          </div>
+          <span class="tag project-stage"></span>
+        </div>
+        <div class="project-budget-row">
+          <span>Budget</span>
+          <strong class="project-budget"></strong>
+        </div>
+        <div class="project-budget-row">
+          <span>Linked grants</span>
+          <strong class="project-grant-count"></strong>
+        </div>
+        <div class="linked-grants"></div>
+      </article>
+    </template>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
