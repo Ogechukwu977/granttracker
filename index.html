@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grant Atlas</title>
+    <meta
+      name="description"
+      content="Grant Atlas helps you track grants, projects, deadlines, and funding relationships in one dashboard."
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -16,8 +20,9 @@
     <div class="app-shell">
       <header class="topbar">
         <div class="brand-pill">Grant Atlas</div>
-        <nav class="top-nav">
+        <nav class="top-nav" aria-label="Primary">
           <a class="nav-link active" href="#dashboard">Dashboard</a>
+          <a class="nav-link" href="#entry">Add Records</a>
           <a class="nav-link" href="#grants">Grants</a>
           <a class="nav-link" href="#projects">Projects</a>
           <a class="nav-link" href="#timeline">Timeline</a>
@@ -31,8 +36,9 @@
             <p class="eyebrow">Funding Command Center</p>
             <h1>Track every grant and the projects it powers.</h1>
             <p class="hero-text">
-              Keep award amounts, deadlines, statuses, and project impact tied
-              together in one calm, high-visibility workspace.
+              A clearer dashboard for your full grant story: what you won, what
+              is still in review, what needs attention next, and which projects
+              each grant actually supports.
             </p>
             <div class="hero-metrics">
               <div class="metric-chip">
@@ -48,6 +54,11 @@
                 <strong id="fundedProjectCount">0</strong>
               </div>
             </div>
+            <div class="hero-notes">
+              <div class="note-pill">1. Add the project first</div>
+              <div class="note-pill">2. Add the grant beside it</div>
+              <div class="note-pill">3. Link them once and track everything</div>
+            </div>
           </div>
 
           <div class="hero-spotlight">
@@ -60,45 +71,70 @@
                 </div>
                 <div>
                   <strong id="grantCoverageRate">0%</strong>
-                  <span>Projects funded</span>
+                  <span>Project coverage</span>
                 </div>
               </div>
               <div class="progress-rail">
                 <span id="coverageProgress"></span>
               </div>
+              <p class="spotlight-footnote">
+                The progress rail shows how many projects currently have at least one grant attached.
+              </p>
             </div>
           </div>
         </section>
 
-        <section class="stats-grid">
-          <article class="panel chart-panel">
+        <section class="entry-grid" id="entry">
+          <article class="panel form-panel">
             <div class="panel-heading">
               <div>
-                <p class="panel-kicker">Portfolio health</p>
-                <h2>Grant pipeline</h2>
+                <p class="panel-kicker">Quick start</p>
+                <h2>Add project</h2>
               </div>
-              <span class="badge" id="pipelineBadge">0 total</span>
+              <span class="badge">Step 1</span>
             </div>
-            <div class="status-bars" id="statusBars"></div>
-          </article>
-
-          <article class="panel spotlight-list" id="grants">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Latest activity</p>
-                <h2>Top grants</h2>
+            <p class="panel-intro">
+              Start with the work you need to fund. This makes the grant form easier to complete.
+            </p>
+            <form id="projectForm" class="stack-form">
+              <label>
+                Project name
+                <input name="name" type="text" placeholder="Neighborhood Mural Series" required />
+              </label>
+              <div class="form-row">
+                <label>
+                  Owner
+                  <input name="owner" type="text" placeholder="Programs Team" required />
+                </label>
+                <label>
+                  Stage
+                  <select name="stage">
+                    <option value="Planning">Planning</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="On Hold">On Hold</option>
+                  </select>
+                </label>
               </div>
-            </div>
-            <div class="list-stack" id="grantList"></div>
+              <label>
+                Budget needed
+                <input name="budget" type="number" min="0" step="100" placeholder="18000" required />
+              </label>
+              <button class="primary-button" type="submit">Save project</button>
+            </form>
           </article>
 
           <article class="panel form-panel">
             <div class="panel-heading">
               <div>
-                <p class="panel-kicker">Add funding</p>
-                <h2>New grant</h2>
+                <p class="panel-kicker">Quick start</p>
+                <h2>Add grant</h2>
               </div>
+              <span class="badge">Step 2</span>
             </div>
+            <p class="panel-intro">
+              Record the funding and attach it to one or more projects without leaving this section.
+            </p>
             <form id="grantForm" class="stack-form">
               <label>
                 Grant name
@@ -133,8 +169,34 @@
                 Linked projects
                 <select name="projectIds" id="grantProjectSelect" multiple></select>
               </label>
+              <p class="field-hint" id="grantProjectHint">
+                Select one or more projects to connect this funding.
+              </p>
               <button class="primary-button" type="submit">Save grant</button>
             </form>
+          </article>
+        </section>
+
+        <section class="stats-grid">
+          <article class="panel chart-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Portfolio health</p>
+                <h2>Grant pipeline</h2>
+              </div>
+              <span class="badge" id="pipelineBadge">0 total</span>
+            </div>
+            <div class="status-bars" id="statusBars"></div>
+          </article>
+
+          <article class="panel spotlight-list" id="grants">
+            <div class="panel-heading">
+              <div>
+                <p class="panel-kicker">Latest activity</p>
+                <h2>Top grants</h2>
+              </div>
+            </div>
+            <div class="list-stack" id="grantList"></div>
           </article>
 
           <article class="panel schedule-panel" id="timeline">
@@ -157,41 +219,6 @@
               </div>
             </div>
             <div class="project-cards" id="projectCards"></div>
-          </article>
-
-          <article class="panel form-panel">
-            <div class="panel-heading">
-              <div>
-                <p class="panel-kicker">Add work</p>
-                <h2>New project</h2>
-              </div>
-            </div>
-            <form id="projectForm" class="stack-form">
-              <label>
-                Project name
-                <input name="name" type="text" placeholder="Neighborhood Mural Series" required />
-              </label>
-              <div class="form-row">
-                <label>
-                  Owner
-                  <input name="owner" type="text" placeholder="Programs Team" required />
-                </label>
-                <label>
-                  Stage
-                  <select name="stage">
-                    <option value="Planning">Planning</option>
-                    <option value="In Progress">In Progress</option>
-                    <option value="Completed">Completed</option>
-                    <option value="On Hold">On Hold</option>
-                  </select>
-                </label>
-              </div>
-              <label>
-                Budget needed
-                <input name="budget" type="number" min="0" step="100" placeholder="18000" required />
-              </label>
-              <button class="primary-button" type="submit">Save project</button>
-            </form>
           </article>
         </section>
       </main>
