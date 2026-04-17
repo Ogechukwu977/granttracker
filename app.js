@@ -1,63 +1,9 @@
 const STORAGE_KEY = "grant-atlas-state-v2";
 
-const demoState = {
-  grants: [
-    {
-      id: crypto.randomUUID(),
-      name: "Creative Futures Grant",
-      funder: "Provincial Arts Council",
-      amount: 42000,
-      status: "Awarded",
-      deadline: "2026-05-14",
-      projectIds: [],
-    },
-    {
-      id: crypto.randomUUID(),
-      name: "Neighborhood Impact Fund",
-      funder: "City Partnership Office",
-      amount: 18500,
-      status: "In Review",
-      deadline: "2026-04-28",
-      projectIds: [],
-    },
-    {
-      id: crypto.randomUUID(),
-      name: "Digital Inclusion Grant",
-      funder: "Northern Tech Foundation",
-      amount: 31000,
-      status: "Awarded",
-      deadline: "2026-06-10",
-      projectIds: [],
-    },
-  ],
-  projects: [
-    {
-      id: crypto.randomUUID(),
-      name: "Mobile Maker Lab",
-      owner: "Youth Programs",
-      stage: "In Progress",
-      budget: 36000,
-    },
-    {
-      id: crypto.randomUUID(),
-      name: "Community Archive Portal",
-      owner: "Digital Team",
-      stage: "Planning",
-      budget: 24000,
-    },
-    {
-      id: crypto.randomUUID(),
-      name: "Laneway Mural Series",
-      owner: "Arts Collective",
-      stage: "Completed",
-      budget: 14000,
-    },
-  ],
+const emptyState = {
+  grants: [],
+  projects: [],
 };
-
-demoState.grants[0].projectIds = [demoState.projects[0].id, demoState.projects[2].id];
-demoState.grants[1].projectIds = [demoState.projects[1].id];
-demoState.grants[2].projectIds = [demoState.projects[0].id, demoState.projects[1].id];
 
 const root = document.querySelector("#dashboard");
 
@@ -85,16 +31,16 @@ if (root) {
 
   function loadState() {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return structuredClone(demoState);
+    if (!raw) return structuredClone(emptyState);
 
     try {
       const parsed = JSON.parse(raw);
       return {
-        grants: Array.isArray(parsed.grants) ? parsed.grants : structuredClone(demoState.grants),
-        projects: Array.isArray(parsed.projects) ? parsed.projects : structuredClone(demoState.projects),
+        grants: Array.isArray(parsed.grants) ? parsed.grants : structuredClone(emptyState.grants),
+        projects: Array.isArray(parsed.projects) ? parsed.projects : structuredClone(emptyState.projects),
       };
     } catch {
-      return structuredClone(demoState);
+      return structuredClone(emptyState);
     }
   }
 
@@ -136,11 +82,11 @@ if (root) {
 
     if (!state.projects.length) {
       const option = document.createElement("option");
-      option.textContent = "Add a project first to link funding";
+      option.textContent = "No content";
       option.disabled = true;
       elements.grantProjectSelect.append(option);
       elements.grantProjectHint.textContent =
-        "Create a project first, then return here to attach funding.";
+        "No content yet. Projects will appear here once added.";
       return;
     }
 
@@ -205,7 +151,7 @@ if (root) {
 
     if (!sorted.length) {
       elements.grantList.innerHTML =
-        '<div class="empty-state">No grants yet. Add your first one to start tracking funding.</div>';
+        '<div class="empty-state">No content yet. Your grants will appear here.</div>';
       return;
     }
 
@@ -226,7 +172,7 @@ if (root) {
     const sorted = [...state.grants].sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
 
     if (!sorted.length) {
-      elements.timelineList.innerHTML = '<div class="empty-state">No deadlines to show yet.</div>';
+      elements.timelineList.innerHTML = '<div class="empty-state">No content yet. Grant deadlines will appear here.</div>';
       return;
     }
 
@@ -251,7 +197,7 @@ if (root) {
 
     if (!state.projects.length) {
       elements.projectCards.innerHTML =
-        '<div class="empty-state">No projects yet. Add one above, then connect funding to it.</div>';
+        '<div class="empty-state">No content yet. Your projects will appear here.</div>';
       return;
     }
 
@@ -273,7 +219,7 @@ if (root) {
           linkedGrants.append(pill);
         });
       } else {
-        linkedGrants.innerHTML = '<div class="empty-state">No funding linked yet.</div>';
+        linkedGrants.innerHTML = '<div class="empty-state">No content yet. Linked grants will appear here.</div>';
       }
 
       elements.projectCards.append(node);
@@ -326,7 +272,7 @@ if (root) {
   });
 
   elements.seedDemoButton.addEventListener("click", () => {
-    state = structuredClone(demoState);
+    state = structuredClone(emptyState);
     saveState();
     render();
   });
